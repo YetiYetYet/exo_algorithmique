@@ -1,0 +1,13 @@
+Alexis BEHIER;10;Paris 4;Paris 8;Paris 5
+Julie RYMER;17;Paris 4;Paris 6;Paris 5
+Molly BARRET;12;Paris 7;Paris 5;Paris 4
+Axel SAID;12;Paris 4;Paris 7;Paris 6
+Aness MENAT;11;Paris 8;Paris 5;Paris 6
+Gaetan GOUSSEAUD;13;Paris 4;Paris 5;Paris 6
+Vanja PLASTIC;11;Paris 7;Paris 5;Paris 8
+Eric DIAS;18;Paris 7;Paris 6;Paris 5
+Anais FERNANDEZ;14;Paris 6;Paris 4;Paris 5
+Gael GROLIERE;19;Paris 4;Paris 6;Paris 7
+Hugo RISCHMANN; 13;Paris 5;Paris 7;Paris 8
+Tommy UGH;16;Paris 7;Paris 5;Paris 4
+Kevin GADAFI;15;Paris 5;Paris 6;Paris 4

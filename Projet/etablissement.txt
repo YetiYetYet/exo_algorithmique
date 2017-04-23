@@ -1,0 +1,5 @@
+Paris 8;4
+Paris 7;3
+Paris 6;3
+Paris 5;2
+Paris 4;1
