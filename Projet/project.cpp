@@ -152,7 +152,7 @@ void doTheThing(Graph &g){
                 VecEdge.push_back(pair_itae.first);
             }
 
-            sort(VecEdge.begin(), VecEdge.end(), [&g] (graph_traits<Graph>::edge_descriptor edge1, graph_traits<Graph>::edge_descriptor edge2) -> bool {g[edge1].dist < g[edge2].dist});
+            sort(VecEdge.begin(), VecEdge.end(), ([&g] (const graph_traits<Graph>::edge_descriptor &edge1, const graph_traits<Graph>::edge_descriptor &edge2) -> bool {return (g[edge1].dist < g[edge2].dist);}));
 
             for(int i = 0; i < g[*pair_it.first].Petablissement.capacite; i++){
                 g[*VecEdge[i]].oui = 1;
