@@ -32,6 +32,7 @@ typedef struct eleve{
 typedef struct my_e_property{
     bool oui;
     int dist;
+    int signature;
 } my_e_property;
 
 typedef struct point {
@@ -113,6 +114,7 @@ void createEdge(Graph &g){
     vector<graph_traits<Graph>::vertex_iterator> VecEleve;
     vector<graph_traits<Graph>::vertex_iterator> VecEtablissement;
     int dist;
+    int signature = 0;
 
     for (auto pair_it = vertices(g);
      pair_it.first != pair_it.second;
@@ -129,8 +131,9 @@ void createEdge(Graph &g){
         for(it=g[*VecEleve[i]].Peleve.choix.begin(); it != g[*VecEleve[i]].Peleve.choix.end(); ++it){
             for(unsigned int j = 0; j < VecEtablissement.size(); j++){
                 if(*it == g[*VecEtablissement[j]].Petablissement.nom){
-                    add_edge(*VecEleve[i], *VecEtablissement[j], {0, dist}, g);
-                    add_edge(*VecEtablissement[j], *VecEleve[i], {0, g[*VecEleve[i]].Peleve.rang}, g);
+                    add_edge(*VecEleve[i], *VecEtablissement[j], {0, dist, signature}, g);
+                    add_edge(*VecEtablissement[j], *VecEleve[i], {0, g[*VecEleve[i]].Peleve.rang, -signature}, g);
+                    signature++;
                 }
             }
             dist++;
@@ -139,6 +142,7 @@ void createEdge(Graph &g){
 }
 
 void doTheThing(Graph &g){
+    int signature;
     for (auto pair_it = vertices(g);
      pair_it.first != pair_it.second;
      ++pair_it.first) {
@@ -152,13 +156,61 @@ void doTheThing(Graph &g){
                 VecEdge.push_back(pair_itae.first);
             }
 
-            sort(VecEdge.begin(), VecEdge.end(), ([&g] (const graph_traits<Graph>::edge_descriptor &edge1, const graph_traits<Graph>::edge_descriptor &edge2) -> bool {return (g[edge1].dist < g[edge2].dist);}));
+            sort(VecEdge.begin(), VecEdge.end(), ([&g] (const graph_traits<Graph>::out_edge_iterator edge1, const graph_traits<Graph>::out_edge_iterator edge2) -> bool {return (g[*edge1].dist < g[*edge2].dist);}));
 
             for(int i = 0; i < g[*pair_it.first].Petablissement.capacite; i++){
                 g[*VecEdge[i]].oui = 1;
             }
         }
     }
+
+    for (auto pair_it = vertices(g);
+     pair_it.first != pair_it.second;
+     ++pair_it.first) {
+            if(g[*pair_it.first].actual == 1){
+            //g[*pair_it.first].Petablissement.capacite
+            vector<graph_traits<Graph>::out_edge_iterator> VecEdge;
+
+            for(auto pair_itae = out_edges(*pair_it.first, g);
+             pair_itae.first != pair_itae.second;
+             ++pair_itae.first){
+                VecEdge.push_back(pair_itae.first);
+            }
+
+            sort(VecEdge.begin(), VecEdge.end(), ([&g] (const graph_traits<Graph>::out_edge_iterator edge1, const graph_traits<Graph>::out_edge_iterator edge2) -> bool {return (g[*edge1].dist < g[*edge2].dist);}));
+
+            g[*VecEdge[0]].oui = 1;
+        }
+    }
+
+    //bool validate = 0;
+    graph_traits<Graph>::vertex_descriptor actualEleve;
+
+    for (auto pair_it = vertices(g);
+     pair_it.first != pair_it.second;
+     ++pair_it.first) {
+         if(g[*pair_it.first].actual == 1){
+            for(auto pair_itae = out_edges(*pair_it.first, g);
+                 pair_itae.first != pair_itae.second;
+                 ++pair_itae.first){
+                if(g[*pair_itae.first].oui == 1)
+                    signature = g[*pair_itae.first].signature;
+                    for(auto pair_itae2 = out_edges(target(*pair_itae.first, g), g);
+                         pair_itae2.first != pair_itae2.second;){
+                        if(g[*pair_itae2.first].signature != -signature && g[*pair_itae.first].oui == 0){
+                            auto acc = *pair_itae2.first;
+                            pair_itae2.first++;
+                            remove_edge(acc, g);
+                        }else{
+                            pair_itae2.first++;
+                        }
+
+                    }
+            }
+        }
+    }
+
+
 }
 
 
@@ -188,6 +240,7 @@ int main(/*int argc, char *argv[]*/){
 
 
     createEdge(g);
+    write_graphviz(std::cout, g);
     doTheThing(g);
     write_graphviz(std::cout, g);
     return 0;
