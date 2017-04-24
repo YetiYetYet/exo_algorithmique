@@ -120,7 +120,7 @@ void createEdge(Graph &g){
         if(g[*pair_it.first].actual == 0)
             VecEtablissement.emplace_back(pair_it.first);
         else if (g[*pair_it.first].actual == 1)
-            VecEleve.emplace_back(pair_it.first);
+            VecEleve.push_back(pair_it.first);
     }
 
     for(unsigned int i = 0; i < VecEleve.size(); i++){
@@ -143,16 +143,16 @@ void doTheThing(Graph &g){
      pair_it.first != pair_it.second;
      ++pair_it.first) {
         if(g[*pair_it.first].actual == 0){
-            g[*pair_it.first].Petablissement.capacite
+            //g[*pair_it.first].Petablissement.capacite
             vector<graph_traits<Graph>::out_edge_iterator> VecEdge;
 
             for(auto pair_itae = out_edges(*pair_it.first, g);
              pair_itae.first != pair_itae.second;
              ++pair_itae.first){
-                VecEdge.emplace_back(*pair_itae.first);
+                VecEdge.push_back(pair_itae.first);
             }
 
-            //sort(VecEdge.begin(), VecEdge.end());
+            sort(VecEdge.begin(), VecEdge.end(), [&g] (graph_traits<Graph>::edge_descriptor edge1, graph_traits<Graph>::edge_descriptor edge2) -> bool {g[edge1].dist < g[edge2].dist});
 
             for(int i = 0; i < g[*pair_it.first].Petablissement.capacite; i++){
                 g[*VecEdge[i]].oui = 1;
